@@ -39,16 +39,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // use Illuminate\Support\Facades\Validator;
         $validators=Validator::make($request->all(),
         [
             'title' => 'required|max:100',
             'content' => 'required',
-            'user_id'=>'required',
+            //'user_id'=>'required',
         ]);
         if($validators->fails())
             return response()->json($validators->messages(),200);
 
-        $post=Post::create($request->all());
+       $post=array(
+           "title"=>$request->title,
+           "content"=>$request->content,
+           "user_id"=>1
+       );
+        $post=Post::create($post);
         return $post;
     }
 
