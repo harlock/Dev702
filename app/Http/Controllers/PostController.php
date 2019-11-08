@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Like;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +19,11 @@ class PostController extends Controller
         $post=Post::join("users","users.id","=","posts.user_id")
         ->select("posts.*","users.name as creator_user")
         ->get();
+        $post->load("getResponses");
+        $post->map(function($value){
+            $value["likes"]=Like::where("post_id",$value->id)->count();
+           return $value;
+        });
         return $post;
     }
 
@@ -51,7 +57,7 @@ class PostController extends Controller
 
        $post=array(
            "title"=>$request->title,
-           "content"=>$request->content,
+           "content"=>$request->get("content"),
            "user_id"=>1
        );
         $post=Post::create($post);
@@ -78,6 +84,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         //
+
     }
 
     /**
@@ -90,6 +97,16 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         //
+        $validators=Validator::make($request->all(),
+            [
+                'title' => 'required|max:100',
+                'content' => 'required',
+                //'user_id'=>'required',
+            ]);
+        if($validators->fails())
+            return response()->json($validators->messages(),200);
+        $post->update($request->all());
+        return $post;
     }
 
     /**
@@ -101,5 +118,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+            $post->delete();
+            return response()->json(["message" => "Eliminado correctamente"], 200);
     }
 }

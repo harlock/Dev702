@@ -11,4 +11,7 @@ class Post extends Model
         'title', 'content', 'user_id',
     ];
 
+    public function getResponses(){
+        return $this->hasMany(Response::class);
+    }
 }

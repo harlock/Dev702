@@ -15,6 +15,11 @@ class LikeController extends Controller
     public function index()
     {
         //
+        $likes=Like::join("users","likes.user_id","=","users.id")
+            ->join("posts","likes.post_id","=","posts.id")
+            ->select("likes.*","users.name","posts.title","posts.content")
+            ->get();
+        return $likes;
     }
 
     /**

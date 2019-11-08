@@ -18,5 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource("posts","PostController",["except"=>["create","edit","show"]]);
+Route::resource("likes","LikeController",["except"=>["create","edit","show"]]);
 
 //localhost:8000/api/posts
