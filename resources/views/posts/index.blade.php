@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="col-9">
-            <button class="btn btn-success">
+            <button class="btn btn-success" data-toggle="modal" data-target="#add_modal">
                 <i class="fa fa-plus"></i>
             </button>
         </div>
@@ -62,6 +62,11 @@
                                   @{{ response.content }}
                                 </div>
                             </div>
+                            <div class="col-10" v-if="!post.get_responses.length">
+                                <div class="alert alert-dark">
+                                   <h5 class="text-danger">No existen comentarios</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,6 +75,7 @@
         <pre>
             @{{ $data }}
         </pre>
+        @include("posts.partials.add")
     </div>
 @endsection
 @section("scripts")
@@ -85,6 +91,8 @@
                 nameUser: "",
                 postActive:null,
                 posts: [],
+                titlePost:"",
+                descriptionPost:"",
 
             },
             methods: {
@@ -92,7 +100,8 @@
                     axios.get(this.api).then(response => {
                         this.posts = response.data;
                     })
-                }
+                },
+                createPost:function(){},
             }
 
         });
