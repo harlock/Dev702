@@ -55,6 +55,18 @@
                                          </span>
                                 </div>
                             </div>
+                            <div class="col-2 text-muted">
+                                <div class="text-danger">
+                                    <a href="#!" class="text-danger" data-toggle="modal" data-target="#delete_modal" @click="idPost=post.id"><i class="fa fa-trash fa-2x"></i><span class=" badge badge-light">
+                                    </span></a>
+                                </div>
+                            </div>
+                            <div class="col-2 text-muted">
+                                <div class="text-danger">
+                                    <a href="#!" class="text-primary" data-toggle="modal" data-target="#update_modal" @click="editPost(post)"><i class="fa fa-edit fa-2x"></i><span class=" badge badge-light">
+                                    </span></a>
+                                </div>
+                            </div>
                         </div>
                         <div class="row justify-content-center" v-if="postActive==post.id">
                             <div class="col-10" v-for="response in post.get_responses">
@@ -67,6 +79,7 @@
                                    <h5 class="text-danger">No existen comentarios</h5>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -76,6 +89,9 @@
             @{{ $data }}
         </pre>
         @include("posts.partials.add")
+        @include("posts.partials.delete")
+        @include("posts.partials.update")
+
     </div>
 @endsection
 @section("scripts")
@@ -86,13 +102,18 @@
                 this.getPosts();
             },
             data: {
-                api: "{{url("api/posts")}}",
+                api: "{{url("api/posts")}}/",
                 message: "Hola desde Vue.js",
                 nameUser: "",
                 postActive:null,
                 posts: [],
                 titlePost:"",
                 descriptionPost:"",
+                idPost:null,
+               // fullPost:[],
+                editTitle:"",
+                editContent:"",
+
 
             },
             methods: {
@@ -102,6 +123,21 @@
                     })
                 },
                 createPost:function(){},
+                deletePost:function(){
+                   axios.delete(this.api+this.idPost).then(response=>{
+                       this.getPosts();
+                   })
+                },
+                editPost:function(post){
+                    this.editTitle=post.title;
+                    this.editContent=post.content;
+                    this.idPost=post.id;
+                },
+                updatePost:function(){
+                    axios.put(this.api+this.idPost,{title:this.editTitle,content:this.editContent}).then(response=>{
+                        this.getPosts();
+                    })
+                }
             }
 
         });
