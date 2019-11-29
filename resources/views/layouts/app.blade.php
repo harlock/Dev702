@@ -48,6 +48,9 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('posts') }}">{{ __('Posts') }}</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -76,6 +79,18 @@
         </main>
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript">
+        window.Laravel = {!! json_encode([
+       'csrfToken' => csrf_token(),
+       'apiToken' => Auth::user()->api_token  ?? null,
+   ]) !!};
+        axios.defaults.headers.common = {
+            'X-CSRF-TOKEN': Laravel.csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Authorization': 'Bearer ' + Laravel.apiToken,
+        };
+    </script>
+
     @yield("scripts")
 </body>
 </html>

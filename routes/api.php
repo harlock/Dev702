@@ -16,8 +16,10 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::group(['middleware' => ['auth:api']],function() {
 
-Route::resource("posts","PostController",["except"=>["create","edit","show"]]);
-Route::resource("likes","LikeController",["except"=>["create","edit","show"]]);
+    Route::resource("posts", "PostController", ["except" => ["create", "edit", "show"]]);
+    Route::resource("likes", "LikeController", ["except" => ["create", "edit", "show"]]);
+});
 
 //localhost:8000/api/posts

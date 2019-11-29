@@ -40,7 +40,10 @@
                             <div class="col-2">
                                 <div class="text-danger">
 
-                                    <i class="fa fa-heart-o fa-2x"></i> <span class="badge badge-light"> @{{ post.likes }}</span>
+                                    <a href="#!" @click="likePost(post)" class="text-danger">
+                                        <i class="fa fa-2x" :class="[post.isLike?'fa-heart':'fa-heart-o']"></i>
+                                        <span class="badge badge-light"> @{{ post.likes }}</span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-2 text-muted">
@@ -69,6 +72,7 @@
                             </div>
                         </div>
                         <div class="row justify-content-center" v-if="postActive==post.id">
+
                             <div class="col-10" v-for="response in post.get_responses">
                                 <div class="alert alert-dark">
                                   @{{ response.content }}
@@ -103,6 +107,7 @@
             },
             data: {
                 api: "{{url("api/posts")}}/",
+                apiLike:"{{url("api/likes")}}/",
                 message: "Hola desde Vue.js",
                 nameUser: "",
                 postActive:null,
@@ -136,6 +141,11 @@
                 updatePost:function(){
                     axios.put(this.api+this.idPost,{title:this.editTitle,content:this.editContent}).then(response=>{
                         this.getPosts();
+                    })
+                },
+                likePost:function(post){
+                    axios.post(this.apiLike,{post_id:post.id}).then(()=>{
+                        this.getPosts()
                     })
                 }
             }

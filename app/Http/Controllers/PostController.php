@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Like;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
@@ -22,6 +23,11 @@ class PostController extends Controller
         $post->load("getResponses");
         $post->map(function($value){
             $value["likes"]=Like::where("post_id",$value->id)->count();
+
+            $value["isLike"]=Like::
+                wherePostId($value->id)
+                ->whereUserId(Auth::user()->id)->count()==0?false:true;
+
            return $value;
         });
         return $post;

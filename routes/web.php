@@ -18,6 +18,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get("posts",function(){
-    return view("posts.index");
+
+Route::group(['middleware' => ['auth']],function() {
+    Route::get("posts", function () {
+        return view("posts.index");
+    });
+});
+
+Route::get("examen",function(){
+    return view("examen.index");
 });
